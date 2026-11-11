@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.adapters.alpha import AlphaPayload
+from app.adapters.beta import BetaPayload
 from app.models import Position, Vehicle
 from app.models.enums import ProviderName
 from app.repositories.position_repository import PositionRepository

@@ -51,6 +51,11 @@ def _to_last_position(position: Position | None) -> LastPosition | None:
     return LastPosition(
         lat=position.lat,
         lng=position.lng,
-        recorded_at=position.recorded_at,
+        recorded_at=_as_utc(position.recorded_at),
         provider=position.provider,
     )
+
+
+def _as_utc(value: datetime) -> datetime:
+    # SQLite does not preserve timezone info: it stores UTC datetimes as naive.
+    return value if value.tzinfo is not None else value.replace(tzinfo=UTC)

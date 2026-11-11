@@ -40,3 +40,7 @@ class Position(Base):
     )
 
     vehicle: Mapped[Vehicle] = relationship(back_populates="positions")
+
+    @property
+    def vehicle_uuid(self) -> uuid.UUID:
+        return self.vehicle.uuid

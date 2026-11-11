@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 
 from app.adapters.alpha import AlphaPayload
+from app.adapters.beta import BetaPayload
 from app.api.dependencies import get_position_service, require_api_key
 from app.api.schemas.providers import PositionOut
 from app.models import User

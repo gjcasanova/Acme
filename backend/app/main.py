@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.routers.providers import router as providers_router
+from app.api.routers.vehicles import router as vehicles_router
 from app.core.config import settings
 from app.services.exceptions import InvalidApiKeyError, VehicleNotFoundError
 

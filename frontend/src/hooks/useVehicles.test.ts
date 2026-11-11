@@ -1,4 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
+import { createElement, StrictMode } from 'react';
+import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchVehicles } from '../api/vehicles';
 import type { Vehicle } from '../types/vehicle';

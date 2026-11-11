@@ -5,9 +5,12 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models import User
+from app.repositories.position_repository import PositionRepository
 from app.repositories.user_repository import UserRepository
+from app.repositories.vehicle_repository import VehicleRepository
 from app.services.auth_service import AuthService
 from app.services.exceptions import InvalidApiKeyError
+from app.services.position_service import PositionService
 
 
 def get_auth_service(db: Annotated[Session, Depends(get_db)]) -> AuthService:

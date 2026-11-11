@@ -98,12 +98,10 @@ describe('useVehicles', () => {
 
   it('al desmontar deja de hacer peticiones y aborta la petición en curso', async () => {
     let capturedSignal: AbortSignal | undefined;
-    let resolveFirst!: (value: Vehicle[]) => void;
     vi.mocked(fetchVehicles).mockImplementationOnce(
       (signal?: AbortSignal) =>
-        new Promise<Vehicle[]>((resolve) => {
+        new Promise<Vehicle[]>(() => {
           capturedSignal = signal;
-          resolveFirst = resolve;
         }),
     );
 

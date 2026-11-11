@@ -23,3 +23,16 @@ def create_alpha_position(
     position_service: Annotated[PositionService, Depends(get_position_service)],
 ) -> PositionOut:
     return PositionOut.model_validate(position_service.register_from_alpha(payload))
+
+
+@router.post(
+    "/beta/positions",
+    response_model=PositionOut,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_beta_position(
+    payload: BetaPayload,
+    _user: Annotated[User, Depends(require_api_key)],
+    position_service: Annotated[PositionService, Depends(get_position_service)],
+) -> PositionOut:
+    return PositionOut.model_validate(position_service.register_from_beta(payload))

@@ -1,5 +1,7 @@
 # Fleet Tracker
 
+[![CI](https://github.com/gjcasanova/Acme/actions/workflows/ci.yml/badge.svg)](https://github.com/gjcasanova/Acme/actions/workflows/ci.yml)
+
 Plataforma de seguimiento de flota que recibe posiciones GPS de **dos proveedores con formatos distintos**, las normaliza a un modelo único y muestra la última posición de cada vehículo en un mapa.
 
 El problema central que resuelve es la **integración multiproveedor**: cada proveedor envía los datos con nombres de campo, identificadores y formatos de tiempo diferentes, y el sistema los traduce a un modelo interno común sin acoplar la lógica de negocio a ningún proveedor.

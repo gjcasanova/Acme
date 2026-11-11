@@ -16,9 +16,7 @@ if TYPE_CHECKING:
 
 class Position(Base):
     __tablename__ = "positions"
-    __table_args__ = (
-        Index("ix_positions_vehicle_id_recorded_at", "vehicle_id", "recorded_at"),
-    )
+    __table_args__ = (Index("ix_positions_vehicle_id_recorded_at", "vehicle_id", "recorded_at"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     uuid: Mapped[uuid.UUID] = mapped_column(

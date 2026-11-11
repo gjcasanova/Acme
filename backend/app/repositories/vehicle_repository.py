@@ -14,19 +14,16 @@ class VehicleRepository:
         return self._db.scalar(select(Vehicle).where(column == external_id))
 
     def list_with_last_position(self) -> list[tuple[Vehicle, Position | None]]:
-        ranked = (
-            select(
-                Position.id.label("position_id"),
-                Position.vehicle_id.label("vehicle_id"),
-                func.row_number()
-                .over(
-                    partition_by=Position.vehicle_id,
-                    order_by=(Position.recorded_at.desc(), Position.received_at.desc()),
-                )
-                .label("rn"),
+        ranked = select(
+            Position.id.label("position_id"),
+            Position.vehicle_id.label("vehicle_id"),
+            func.row_number()
+            .over(
+                partition_by=Position.vehicle_id,
+                order_by=(Position.recorded_at.desc(), Position.received_at.desc()),
             )
-            .subquery()
-        )
+            .label("rn"),
+        ).subquery()
 
         statement = (
             select(Vehicle, Position)

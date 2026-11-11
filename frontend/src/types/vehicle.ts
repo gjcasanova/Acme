@@ -13,3 +13,7 @@ export interface Vehicle {
   name: string;
   last_position: LastPosition | null;
 }
+
+export interface LocatedVehicle extends Vehicle {
+  last_position: LastPosition;
+}

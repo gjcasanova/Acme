@@ -120,6 +120,18 @@ describe('useVehicles', () => {
     expect(fetchVehicles).toHaveBeenCalledTimes(1);
   });
 
+  it('completa la primera petición con StrictMode (doble montaje en desarrollo)', async () => {
+    vi.mocked(fetchVehicles).mockResolvedValue([vehicle]);
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      createElement(StrictMode, null, children);
+    const { result } = renderHook(() => useVehicles(), { wrapper });
+    await flush();
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.vehicles).toEqual([vehicle]);
+  });
+
   it('no inicia una petición nueva si la anterior sigue en curso', async () => {
     let resolveFirst!: (value: Vehicle[]) => void;
     vi.mocked(fetchVehicles).mockImplementationOnce(

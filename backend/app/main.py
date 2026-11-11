@@ -18,6 +18,7 @@ app.add_middleware(
 )
 
 app.include_router(providers_router)
+app.include_router(vehicles_router)
 
 
 @app.exception_handler(InvalidApiKeyError)

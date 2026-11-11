@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import Depends, Header
 from sqlalchemy.orm import Session
 
@@ -8,7 +10,7 @@ from app.services.auth_service import AuthService
 from app.services.exceptions import InvalidApiKeyError
 
 
-def get_auth_service(db: Session = Depends(get_db)) -> AuthService:
+def get_auth_service(db: Annotated[Session, Depends(get_db)]) -> AuthService:
     return AuthService(UserRepository(db))
 
 
@@ -22,8 +24,8 @@ def _read_bearer_token(authorization: str | None) -> str | None:
 
 
 def require_api_key(
-    authorization: str | None = Header(default=None),
-    auth_service: AuthService = Depends(get_auth_service),
+    auth_service: Annotated[AuthService, Depends(get_auth_service)],
+    authorization: Annotated[str | None, Header()] = None,
 ) -> User:
     raw_api_key = _read_bearer_token(authorization)
     if raw_api_key is None:

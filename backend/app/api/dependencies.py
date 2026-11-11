@@ -11,6 +11,7 @@ from app.repositories.vehicle_repository import VehicleRepository
 from app.services.auth_service import AuthService
 from app.services.exceptions import InvalidApiKeyError
 from app.services.position_service import PositionService
+from app.services.vehicle_service import VehicleService
 
 
 def get_auth_service(db: Annotated[Session, Depends(get_db)]) -> AuthService:
@@ -19,6 +20,10 @@ def get_auth_service(db: Annotated[Session, Depends(get_db)]) -> AuthService:
 
 def get_position_service(db: Annotated[Session, Depends(get_db)]) -> PositionService:
     return PositionService(VehicleRepository(db), PositionRepository(db))
+
+
+def get_vehicle_service(db: Annotated[Session, Depends(get_db)]) -> VehicleService:
+    return VehicleService(VehicleRepository(db))
 
 
 def _read_bearer_token(authorization: str | None) -> str | None:

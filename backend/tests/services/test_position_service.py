@@ -54,9 +54,7 @@ def test_register_from_alpha_stores_position_linked_to_vehicle(db_session: Sessi
 
 def test_register_from_alpha_converts_ts_to_utc(db_session: Session) -> None:
     _add_vehicle(db_session, plate="ABC123", alpha_id="ALP-001")
-    payload = AlphaPayload(
-        vehicle_id="ALP-001", lat=1.0, lng=2.0, ts="2026-11-12T03:15:00-05:00"
-    )
+    payload = AlphaPayload(vehicle_id="ALP-001", lat=1.0, lng=2.0, ts="2026-11-12T03:15:00-05:00")
 
     position = _service(db_session).register_from_alpha(payload)
 

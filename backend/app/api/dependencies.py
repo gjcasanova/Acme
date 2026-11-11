@@ -17,6 +17,10 @@ def get_auth_service(db: Annotated[Session, Depends(get_db)]) -> AuthService:
     return AuthService(UserRepository(db))
 
 
+def get_position_service(db: Annotated[Session, Depends(get_db)]) -> PositionService:
+    return PositionService(VehicleRepository(db), PositionRepository(db))
+
+
 def _read_bearer_token(authorization: str | None) -> str | None:
     if not authorization:
         return None

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchVehicles } from '../api/vehicles';
 import type { Vehicle } from '../types/vehicle';
 
@@ -12,22 +12,21 @@ export function useVehicles(intervalMs = 5000): UseVehiclesResult {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const inFlight = useRef(false);
-  const controller = useRef<AbortController | null>(null);
 
   useEffect(() => {
     let mounted = true;
+    let inFlight = false;
+    let controller: AbortController | null = null;
 
     async function load(): Promise<void> {
-      if (inFlight.current) {
+      if (inFlight) {
         return;
       }
-      inFlight.current = true;
-      const requestController = new AbortController();
-      controller.current = requestController;
+      inFlight = true;
+      controller = new AbortController();
 
       try {
-        const next = await fetchVehicles(requestController.signal);
+        const next = await fetchVehicles(controller.signal);
         if (!mounted) {
           return;
         }
@@ -39,7 +38,7 @@ export function useVehicles(intervalMs = 5000): UseVehiclesResult {
         }
         setError(cause instanceof Error ? cause : new Error(String(cause)));
       } finally {
-        inFlight.current = false;
+        inFlight = false;
         if (mounted) {
           setIsLoading(false);
         }
@@ -52,7 +51,7 @@ export function useVehicles(intervalMs = 5000): UseVehiclesResult {
     return () => {
       mounted = false;
       window.clearInterval(intervalId);
-      controller.current?.abort();
+      controller?.abort();
     };
   }, [intervalMs]);
 

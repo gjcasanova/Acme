@@ -87,3 +87,72 @@ def test_register_from_alpha_does_not_match_beta_code(db_session: Session) -> No
 
     with pytest.raises(VehicleNotFoundError):
         _service(db_session).register_from_alpha(payload)
+
+
+def test_register_from_beta_stores_position_linked_to_vehicle(db_session: Session) -> None:
+    vehicle = _add_vehicle(db_session, plate="GHI789", beta_code="BT-9001")
+    payload = BetaPayload(
+        unit_code="BT-9001",
+        coords={"latitude": 4.6533, "longitude": -74.0836},
+        epoch=1794452100,
+    )
+
+    position = _service(db_session).register_from_beta(payload)
+
+    assert position.id is not None
+    assert position.vehicle_id == vehicle.id
+    assert position.provider == ProviderName.beta
+    assert position.lat == 4.6533
+    assert position.lng == -74.0836
+
+    stored = db_session.scalar(select(Position).where(Position.uuid == position.uuid))
+    assert stored is not None
+    assert stored.vehicle_id == vehicle.id
+    assert stored.provider == ProviderName.beta
+
+
+def test_register_from_beta_converts_epoch_to_utc(db_session: Session) -> None:
+    _add_vehicle(db_session, plate="GHI789", beta_code="BT-9001")
+    payload = BetaPayload(
+        unit_code="BT-9001", coords={"latitude": 1.0, "longitude": 2.0}, epoch=1794452100
+    )
+
+    position = _service(db_session).register_from_beta(payload)
+
+    assert position.recorded_at == datetime(2026, 11, 12, 2, 55, 0, tzinfo=UTC)
+
+
+def test_register_from_beta_unknown_vehicle_raises(db_session: Session) -> None:
+    _add_vehicle(db_session, plate="GHI789", beta_code="BT-9001")
+    payload = BetaPayload(
+        unit_code="UNKNOWN", coords={"latitude": 1.0, "longitude": 2.0}, epoch=1794452100
+    )
+
+    with pytest.raises(VehicleNotFoundError):
+        _service(db_session).register_from_beta(payload)
+
+
+def test_register_from_beta_does_not_match_alpha_id(db_session: Session) -> None:
+    _add_vehicle(db_session, plate="ABC123", alpha_id="ALP-001")
+    payload = BetaPayload(
+        unit_code="ALP-001", coords={"latitude": 1.0, "longitude": 2.0}, epoch=1794452100
+    )
+
+    with pytest.raises(VehicleNotFoundError):
+        _service(db_session).register_from_beta(payload)
+
+
+def test_register_from_alpha_and_beta_link_to_same_vehicle(db_session: Session) -> None:
+    vehicle = _add_vehicle(db_session, plate="JKL012", alpha_id="ALP-004", beta_code="BT-9004")
+    alpha_payload = AlphaPayload(vehicle_id="ALP-004", lat=1.0, lng=2.0, ts="2026-11-12T03:15:00Z")
+    beta_payload = BetaPayload(
+        unit_code="BT-9004", coords={"latitude": 3.0, "longitude": 4.0}, epoch=1794452100
+    )
+
+    alpha_position = _service(db_session).register_from_alpha(alpha_payload)
+    beta_position = _service(db_session).register_from_beta(beta_payload)
+
+    assert alpha_position.vehicle_id == vehicle.id
+    assert beta_position.vehicle_id == vehicle.id
+    assert alpha_position.provider == ProviderName.alpha
+    assert beta_position.provider == ProviderName.beta

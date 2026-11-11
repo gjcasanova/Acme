@@ -36,6 +36,7 @@ class Position(Base):
             ProviderName,
             native_enum=False,
             values_callable=lambda cls: [member.value for member in cls],
+            validate_strings=True,
         ),
         nullable=False,
     )

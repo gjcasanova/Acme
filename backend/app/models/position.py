@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, Enum, Float, ForeignKey, Index, Uuid
@@ -29,7 +29,7 @@ class Position(Base):
     lng: Mapped[float] = mapped_column(Float, nullable=False)
     recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     received_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC)
     )
     provider: Mapped[ProviderName] = mapped_column(
         Enum(
@@ -41,4 +41,4 @@ class Position(Base):
         nullable=False,
     )
 
-    vehicle: Mapped["Vehicle"] = relationship(back_populates="positions")
+    vehicle: Mapped[Vehicle] = relationship(back_populates="positions")

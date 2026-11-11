@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, String, Uuid
@@ -25,7 +25,7 @@ class Vehicle(Base):
     alpha_id: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
     beta_code: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC)
     )
 
-    positions: Mapped[list["Position"]] = relationship(back_populates="vehicle")
+    positions: Mapped[list[Position]] = relationship(back_populates="vehicle")

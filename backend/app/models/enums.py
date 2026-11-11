@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ProviderName(str, Enum):
+class ProviderName(StrEnum):
     alpha = "alpha"
     beta = "beta"

@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 
 from app.models import Position, Vehicle
 from app.models.enums import ProviderName

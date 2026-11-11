@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 
 from app.adapters.alpha import AlphaAdapter, AlphaPayload
 from app.adapters.base import NormalizedPosition
+from app.adapters.beta import BetaAdapter, BetaPayload
 from app.models import Position
 from app.repositories.position_repository import PositionRepository
 from app.repositories.vehicle_repository import VehicleRepository

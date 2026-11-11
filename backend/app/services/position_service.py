@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 
 from app.adapters.alpha import AlphaAdapter, AlphaPayload
 from app.adapters.base import NormalizedPosition
+from app.adapters.beta import BetaAdapter, BetaPayload
 from app.models import Position
 from app.repositories.position_repository import PositionRepository
 from app.repositories.vehicle_repository import VehicleRepository
@@ -19,6 +20,9 @@ class PositionService:
 
     def register_from_alpha(self, payload: AlphaPayload) -> Position:
         return self._register(AlphaAdapter().to_normalized(payload))
+
+    def register_from_beta(self, payload: BetaPayload) -> Position:
+        return self._register(BetaAdapter().to_normalized(payload))
 
     def _register(self, normalized: NormalizedPosition) -> Position:
         vehicle = self._vehicle_repository.get_by_external_id(

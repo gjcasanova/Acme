@@ -21,6 +21,9 @@ class PositionService:
     def register_from_alpha(self, payload: AlphaPayload) -> Position:
         return self._register(AlphaAdapter().to_normalized(payload))
 
+    def register_from_beta(self, payload: BetaPayload) -> Position:
+        return self._register(BetaAdapter().to_normalized(payload))
+
     def _register(self, normalized: NormalizedPosition) -> Position:
         vehicle = self._vehicle_repository.get_by_external_id(
             normalized.provider, normalized.external_id
